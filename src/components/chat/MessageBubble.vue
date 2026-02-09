@@ -126,6 +126,7 @@ const props = withDefaults(defineProps<Props>(), {
 // Emits
 const emit = defineEmits<{
   (e: 'follow-up', question: string): void
+  (e: 'typing-complete'): void  // 打字动画完成事件
 }>()
 
 // 状态
@@ -267,6 +268,8 @@ function finishTyping() {
   }
   isTyping.value = false
   displayedContent.value = fullRenderedContent.value
+  // 通知父组件打字动画已完成
+  emit('typing-complete')
 }
 
 // 方法

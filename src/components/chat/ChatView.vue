@@ -20,6 +20,7 @@
           :citations="message.citations"
           :follow-up-questions="message.role === 'assistant' ? followUpQuestions : undefined"
           @follow-up="handleFollowUp"
+          @typing-complete="handleTypingComplete"
         />
       </div>
     </div>
@@ -270,7 +271,8 @@ async function handleSubmit(query: string) {
   // 模拟流式输出
   await simulateStreaming(aiMessageId)
 
-  chatStore.setGenerating(false)
+  // 注意：setGenerating(false) 现在由 MessageBubble 的 typing-complete 事件触发
+  // 确保按钮状态在打字动画完成后才恢复
 }
 
 async function simulateStreaming(messageId: string) {
@@ -424,6 +426,14 @@ async function simulateStreaming(messageId: string) {
 
 function handleFollowUp(question: string) {
   handleSubmit(question)
+}
+
+// 打字动画完成回调 - 重置生成状态
+function handleTypingComplete() {
+  // 只有在当前正在生成时才处理
+  if (isGenerating.value) {
+    chatStore.setGenerating(false)
+  }
 }
 
 // 停止生成
