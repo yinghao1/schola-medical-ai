@@ -264,6 +264,8 @@ function getCardVariant(index: number): 'blue' | 'purple' | 'orange' {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  /* Grid 默认 align-items: stretch，确保同行卡片等高 */
+  align-items: stretch;
 }
 
 /* 响应式布局 */

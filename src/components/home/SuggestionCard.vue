@@ -55,17 +55,17 @@ function handleClick() {
 </script>
 
 <style scoped>
-/* 卡片基础样式 - Figma: border-radius 16px, padding 15px, gap 20px */
+/* 卡片基础样式 - Figma: border-radius 16px, padding 15px */
 .suggestion-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 20px;
+  gap: 10px;
   padding: 15px;
   border-radius: 16px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  height: 120px;
+  /* 移除固定高度，由 Grid 的 align-items: stretch 实现等高 */
 }
 
 .suggestion-card:hover {
