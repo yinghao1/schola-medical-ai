@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aurora Background</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .aurora-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(240, 248, 255, 0.2) 50%,
+        rgba(230, 244, 255, 0.3) 100%
+      );
+    }
+
+    /* Aurora gradient blobs */
+    .aurora-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.15;
+      will-change: transform;
+    }
+
+    /* blob-1 青蓝色 - 更明亮的青色 */
+    .aurora-blob-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle,
+        rgba(73, 223, 246, 0.8) 0%,
+        rgba(64, 180, 255, 0.5) 40%,
+        rgba(64, 128, 255, 0.2) 70%,
+        transparent 100%
+      );
+      top: -100px;
+      right: 5%;
+      animation: float-1 8s ease-in-out infinite;
+    }
+
+    /* blob-2 紫粉色 - 更饱和的紫色 */
+    .aurora-blob-2 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle,
+        rgba(152, 99, 251, 0.75) 0%,
+        rgba(180, 80, 200, 0.4) 40%,
+        rgba(225, 66, 146, 0.2) 70%,
+        transparent 100%
+      );
+      top: 15%;
+      left: -5%;
+      animation: float-2 10s ease-in-out infinite;
+    }
+
+    /* blob-3 深蓝色 - 增强蓝色 */
+    .aurora-blob-3 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle,
+        rgba(0, 106, 235, 0.7) 0%,
+        rgba(30, 150, 255, 0.4) 40%,
+        rgba(73, 223, 246, 0.2) 70%,
+        transparent 100%
+      );
+      bottom: 5%;
+      right: 15%;
+      animation: float-3 12s ease-in-out infinite;
+    }
+
+    /* blob-4 橙粉色 - 温暖的橙色 */
+    .aurora-blob-4 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle,
+        rgba(251, 153, 28, 0.6) 0%,
+        rgba(251, 120, 80, 0.35) 40%,
+        rgba(225, 66, 146, 0.15) 70%,
+        transparent 100%
+      );
+      bottom: 25%;
+      left: 10%;
+      animation: float-4 14s ease-in-out infinite;
+    }
+
+    /* 独立的动画关键帧 - 更大的移动幅度和更明显的路径 */
+    @keyframes float-1 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      20% {
+        transform: translate(-80px, 60px) scale(1.1);
+      }
+      40% {
+        transform: translate(-120px, 100px) scale(0.95);
+      }
+      60% {
+        transform: translate(-40px, 140px) scale(1.05);
+      }
+      80% {
+        transform: translate(40px, 80px) scale(0.98);
+      }
+    }
+
+    @keyframes float-2 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      20% {
+        transform: translate(100px, -40px) scale(1.08);
+      }
+      40% {
+        transform: translate(160px, 30px) scale(0.92);
+      }
+      60% {
+        transform: translate(80px, 100px) scale(1.12);
+      }
+      80% {
+        transform: translate(40px, 50px) scale(0.96);
+      }
+    }
+
+    @keyframes float-3 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      20% {
+        transform: translate(-60px, -80px) scale(0.94);
+      }
+      40% {
+        transform: translate(80px, -120px) scale(1.15);
+      }
+      60% {
+        transform: translate(120px, -40px) scale(0.9);
+      }
+      80% {
+        transform: translate(40px, 40px) scale(1.05);
+      }
+    }
+
+    @keyframes float-4 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      20% {
+        transform: translate(60px, -100px) scale(1.1);
+      }
+      40% {
+        transform: translate(140px, -60px) scale(0.88);
+      }
+      60% {
+        transform: translate(100px, 40px) scale(1.08);
+      }
+      80% {
+        transform: translate(30px, -30px) scale(0.95);
+      }
+    }
+
+    /* Soft gradient overlay - 非常淡的遮罩，让颜色更通透 */
+    .aurora-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.2) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Noise texture for subtle grain effect */
+    .aurora-noise {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="aurora-container">
+    <div class="aurora-blob aurora-blob-1"></div>
+    <div class="aurora-blob aurora-blob-2"></div>
+    <div class="aurora-blob aurora-blob-3"></div>
+    <div class="aurora-blob aurora-blob-4"></div>
+    <div class="aurora-overlay"></div>
+    <div class="aurora-noise"></div>
+  </div>
+</body>
+</html>
