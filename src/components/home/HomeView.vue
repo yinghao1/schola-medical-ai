@@ -54,17 +54,18 @@
           </button>
         </div>
         <!-- 卡片网格 - Figma: 3列, gap 10px -->
-        <TransitionGroup name="card-list" tag="div" class="suggestions-grid">
+        <div class="suggestions-grid">
           <SuggestionCard
             v-for="(item, index) in suggestedQuestions"
-            :key="item.id"
+            :key="`card-${index}`"
             :question="item.question"
             :category="item.category"
             :category-label="item.categoryLabel"
             :variant="getCardVariant(index)"
+            :class="{ 'card-refreshing': isRefreshing }"
             @click="handleSuggestionClick"
           />
-        </TransitionGroup>
+        </div>
       </div>
     </div>
   </div>
@@ -284,23 +285,20 @@ function getCardVariant(index: number): 'blue' | 'purple' | 'orange' {
   }
 }
 
-/* 卡片列表过渡动画 */
-.card-list-enter-active,
-.card-list-leave-active {
-  transition: all 0.3s ease;
+/* 卡片刷新动画 - 仅淡入淡出，无位移 */
+.card-refreshing {
+  animation: card-fade 0.3s ease-in-out;
 }
 
-.card-list-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.card-list-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-.card-list-move {
-  transition: transform 0.3s ease;
+@keyframes card-fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

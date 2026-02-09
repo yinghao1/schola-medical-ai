@@ -59,12 +59,13 @@ function handleClick() {
 .suggestion-card {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 20px;
   padding: 15px;
   border-radius: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 120px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 120px;
 }
 
 .suggestion-card:hover {
