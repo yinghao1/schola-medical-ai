@@ -133,8 +133,9 @@ const visibleSteps = computed(() => {
 
 // 计算属性 - 是否正在思考（仅用于外发光效果）
 const isThinkingActive = computed(() => {
-  // 当 props.isThinking 为 true，或者步骤动画还未完成时显示外发光
-  return props.isThinking && (currentVisibleCount.value < props.steps.length || completedStepIndices.value.size < props.steps.length)
+  // 只要面板还是展开状态且正在思考中，就显示呼吸动效
+  // 直到面板收起后才停止
+  return props.isThinking && expanded.value
 })
 
 // 检查步骤是否已完成（显示静态图标）
