@@ -121,9 +121,10 @@ export const useChatStore = defineStore('chat', () => {
   const suggestedQuestions = computed<SuggestedQuestion[]>(() => {
     return FIXED_LABELS.map(label => {
       const questions = questionsByLabel[label]
-      const index = labelIndices.value[label]
+      if (!questions || questions.length === 0) return undefined
+      const index = labelIndices.value[label] ?? 0
       return questions[index % questions.length]
-    })
+    }).filter((q): q is SuggestedQuestion => q !== undefined)
   })
 
   // 继续提问建议
@@ -238,7 +239,10 @@ export const useChatStore = defineStore('chat', () => {
   function refreshSuggestedQuestions() {
     FIXED_LABELS.forEach(label => {
       const questions = questionsByLabel[label]
-      labelIndices.value[label] = (labelIndices.value[label] + 1) % questions.length
+      if (questions && questions.length > 0) {
+        const currentIndex = labelIndices.value[label] ?? 0
+        labelIndices.value[label] = (currentIndex + 1) % questions.length
+      }
     })
   }
 
