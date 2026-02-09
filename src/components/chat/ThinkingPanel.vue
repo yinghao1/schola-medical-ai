@@ -125,6 +125,7 @@ const expanded = ref(props.defaultExpanded)
 const currentVisibleCount = ref(0) // 当前显示的步骤数量
 const completedStepIndices = ref<Set<number>>(new Set()) // 已完成的步骤索引
 const timers = ref<number[]>([]) // 定时器引用
+const isAnimationRunning = ref(false) // 动画是否正在运行（用于控制呼吸动效）
 
 // 计算属性 - 当前可见的步骤
 const visibleSteps = computed(() => {
@@ -132,10 +133,9 @@ const visibleSteps = computed(() => {
 })
 
 // 计算属性 - 是否正在思考（仅用于外发光效果）
+// 使用组件内部状态控制，不依赖 props.isThinking，确保动效持续到面板收起
 const isThinkingActive = computed(() => {
-  // 只要面板还是展开状态且正在思考中，就显示呼吸动效
-  // 直到面板收起后才停止
-  return props.isThinking && expanded.value
+  return isAnimationRunning.value
 })
 
 // 检查步骤是否已完成（显示静态图标）
@@ -146,8 +146,9 @@ function isStepCompleted(index: number): boolean {
 // 收起完成回调
 function onCollapseComplete() {
   // 思考完成后折叠面板，但保持显示
+  // 停止呼吸动效
+  isAnimationRunning.value = false
   // 触发事件通知父组件可以开始显示内容
-  // 只要面板收起就触发，让父组件决定何时显示内容
   emit('collapse-complete')
 }
 
@@ -157,6 +158,7 @@ function startThinkingAnimation() {
   currentVisibleCount.value = 0
   completedStepIndices.value.clear()
   expanded.value = true
+  isAnimationRunning.value = true // 开始动画，显示呼吸动效
 
   // 清除之前的定时器
   timers.value.forEach(timer => clearTimeout(timer))
