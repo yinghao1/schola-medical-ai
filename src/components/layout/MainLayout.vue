@@ -265,6 +265,7 @@ function delay(ms: number) {
   border: none;
   z-index: 0;
   pointer-events: none;
+  display: none;
 }
 
 /* 移动端头部 */
