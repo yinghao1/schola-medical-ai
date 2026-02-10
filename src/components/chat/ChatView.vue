@@ -21,6 +21,7 @@
           :follow-up-questions="message.role === 'assistant' ? followUpQuestions : undefined"
           @follow-up="handleFollowUp"
           @typing-complete="handleTypingComplete"
+          @show-toast="handleShowToast"
         />
       </div>
     </div>
@@ -53,6 +54,18 @@
       <!-- AI 生成声明 -->
       <div class="ai-disclaimer">内容由 AI 生成，仅供参考</div>
     </div>
+
+    <!-- Toast 提示组件 -->
+    <transition name="toast">
+      <div v-if="showToast" class="toast-container">
+        <div class="toast-content">
+          <svg class="toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 0C3.58 0 0 3.58 0 8C0 12.42 3.58 16 8 16C12.42 16 16 12.42 16 8C16 3.58 12.42 0 8 0ZM6.5 11.5L3 8L4.06 6.94L6.5 9.38L11.94 4L13 5.06L6.5 11.5Z" fill="#52C41A"/>
+          </svg>
+          <span class="toast-message">{{ toastMessage }}</span>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -75,6 +88,11 @@ const showScrollButton = ref(false)
 const userHasScrolled = ref(false)
 const currentAiMessageId = ref<string | null>(null) // 当前 AI 消息 ID
 const isAutoScrolling = ref(false) // 是否正在自动滚动
+
+// Toast 状态
+const toastMessage = ref('')
+const showToast = ref(false)
+let toastTimer: ReturnType<typeof setTimeout> | null = null
 
 // 从 store 获取消息列表
 const messages = computed(() => currentConversation.value?.messages || [])
@@ -436,6 +454,22 @@ function handleTypingComplete() {
   }
 }
 
+// Toast 提示处理
+function handleShowToast(message: string) {
+  // 清除之前的定时器
+  if (toastTimer) {
+    clearTimeout(toastTimer)
+  }
+
+  toastMessage.value = message
+  showToast.value = true
+
+  // 2 秒后自动隐藏
+  toastTimer = setTimeout(() => {
+    showToast.value = false
+  }, 2000)
+}
+
 // 停止生成
 function handleStop() {
   chatStore.requestStop()
@@ -576,5 +610,65 @@ watch(() => messages.value.length, (newLen, oldLen) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* Toast 提示组件样式 */
+.toast-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.toast-message {
+  font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #FFFFFF;
+  white-space: nowrap;
+}
+
+/* Toast 动画 */
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.toast-enter-to {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.toast-leave-from {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
 }
 </style>

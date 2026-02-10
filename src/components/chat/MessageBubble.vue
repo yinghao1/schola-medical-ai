@@ -29,6 +29,65 @@
           </div>
         </transition>
 
+        <!-- 互动功能图标区域 - 只在内容输出完成后显示 -->
+        <div v-if="shouldShowContent && !isTyping" class="interaction-icons">
+          <!-- 点赞 -->
+          <button
+            @click="handleLike"
+            class="interaction-btn"
+            :class="{ 'is-active': isLiked }"
+          >
+            <span class="btn-tooltip">点赞</span>
+            <!-- 非激活态 -->
+            <svg v-if="!isLiked" width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M5.83333 18.3334H3.33333C2.89131 18.3334 2.46738 18.1578 2.15482 17.8453C1.84226 17.5327 1.66667 17.1088 1.66667 16.6667V10.8334C1.66667 10.3914 1.84226 9.96746 2.15482 9.6549C2.46738 9.34234 2.89131 9.16675 3.33333 9.16675H5.83333M11.6667 7.50008V4.16675C11.6667 3.50371 11.4033 2.86782 10.9345 2.39898C10.4656 1.93014 9.82971 1.66675 9.16667 1.66675L5.83333 9.16675V18.3334H15.2333C15.6353 18.338 16.0249 18.1961 16.3284 17.9349C16.6319 17.6737 16.8284 17.3111 16.8817 16.9126L17.8567 9.41258C17.8891 9.16961 17.8677 8.92274 17.7939 8.68857C17.7201 8.4544 17.5958 8.23841 17.4294 8.05561C17.263 7.87282 17.0586 7.72773 16.8307 7.63059C16.6029 7.53345 16.357 7.48658 16.1092 7.49341H11.6667Z" stroke="#707070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <!-- 激活态 -->
+            <svg v-else width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M5.83333 18.3334H3.33333C2.89131 18.3334 2.46738 18.1578 2.15482 17.8453C1.84226 17.5327 1.66667 17.1088 1.66667 16.6667V10.8334C1.66667 10.3914 1.84226 9.96746 2.15482 9.6549C2.46738 9.34234 2.89131 9.16675 3.33333 9.16675H5.83333M11.6667 7.50008V4.16675C11.6667 3.50371 11.4033 2.86782 10.9345 2.39898C10.4656 1.93014 9.82971 1.66675 9.16667 1.66675L5.83333 9.16675V18.3334H15.2333C15.6353 18.338 16.0249 18.1961 16.3284 17.9349C16.6319 17.6737 16.8284 17.3111 16.8817 16.9126L17.8567 9.41258C17.8891 9.16961 17.8677 8.92274 17.7939 8.68857C17.7201 8.4544 17.5958 8.23841 17.4294 8.05561C17.263 7.87282 17.0586 7.72773 16.8307 7.63059C16.6029 7.53345 16.357 7.48658 16.1092 7.49341H11.6667Z" stroke="#4080FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="#4080FF" fill-opacity="0.1"/>
+            </svg>
+          </button>
+          <!-- 点踩 -->
+          <button
+            @click="handleDislike"
+            class="interaction-btn"
+            :class="{ 'is-active': isDisliked }"
+          >
+            <span class="btn-tooltip">点踩</span>
+            <!-- 非激活态 -->
+            <svg v-if="!isDisliked" width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M14.1667 1.66663H16.6667C17.1087 1.66663 17.5326 1.84222 17.8452 2.15478C18.1577 2.46734 18.3333 2.89127 18.3333 3.33329V9.16663C18.3333 9.60865 18.1577 10.0326 17.8452 10.3451C17.5326 10.6577 17.1087 10.8333 16.6667 10.8333H14.1667M8.33333 12.5V15.8333C8.33333 16.4963 8.59672 17.1322 9.06557 17.601C9.53441 18.0699 10.1703 18.3333 10.8333 18.3333L14.1667 10.8333V1.66663H4.76667C4.36465 1.66199 3.9751 1.80387 3.67161 2.06509C3.36812 2.3263 3.17158 2.68894 3.11833 3.08746L2.14333 10.5875C2.11092 10.8304 2.13235 11.0773 2.20614 11.3114C2.27993 11.5456 2.40418 11.7616 2.57058 11.9444C2.73699 12.1272 2.94141 12.2723 3.16926 12.3694C3.39711 12.4665 3.64304 12.5134 3.89083 12.5066H8.33333Z" stroke="#707070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <!-- 激活态 -->
+            <svg v-else width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M14.1667 1.66663H16.6667C17.1087 1.66663 17.5326 1.84222 17.8452 2.15478C18.1577 2.46734 18.3333 2.89127 18.3333 3.33329V9.16663C18.3333 9.60865 18.1577 10.0326 17.8452 10.3451C17.5326 10.6577 17.1087 10.8333 16.6667 10.8333H14.1667M8.33333 12.5V15.8333C8.33333 16.4963 8.59672 17.1322 9.06557 17.601C9.53441 18.0699 10.1703 18.3333 10.8333 18.3333L14.1667 10.8333V1.66663H4.76667C4.36465 1.66199 3.9751 1.80387 3.67161 2.06509C3.36812 2.3263 3.17158 2.68894 3.11833 3.08746L2.14333 10.5875C2.11092 10.8304 2.13235 11.0773 2.20614 11.3114C2.27993 11.5456 2.40418 11.7616 2.57058 11.9444C2.73699 12.1272 2.94141 12.2723 3.16926 12.3694C3.39711 12.4665 3.64304 12.5134 3.89083 12.5066H8.33333Z" stroke="#4080FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="#4080FF" fill-opacity="0.1"/>
+            </svg>
+          </button>
+          <!-- 复制 -->
+          <button
+            @click="handleCopy"
+            class="interaction-btn"
+          >
+            <span class="btn-tooltip">复制</span>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M16.6667 7.5H9.16667C8.24619 7.5 7.5 8.24619 7.5 9.16667V16.6667C7.5 17.5871 8.24619 18.3333 9.16667 18.3333H16.6667C17.5871 18.3333 18.3333 17.5871 18.3333 16.6667V9.16667C18.3333 8.24619 17.5871 7.5 16.6667 7.5Z" stroke="#707070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4.16667 12.5H3.33333C2.89131 12.5 2.46738 12.3244 2.15482 12.0118C1.84226 11.6993 1.66667 11.2754 1.66667 10.8333V3.33333C1.66667 2.89131 1.84226 2.46738 2.15482 2.15482C2.46738 1.84226 2.89131 1.66667 3.33333 1.66667H10.8333C11.2754 1.66667 11.6993 1.84226 12.0118 2.15482C12.3244 2.46738 12.5 2.89131 12.5 3.33333V4.16667" stroke="#707070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <!-- 下载 -->
+          <button
+            @click="handleDownload"
+            class="interaction-btn"
+          >
+            <span class="btn-tooltip">下载</span>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5" stroke="#707070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5.83333 8.33337L10 12.5L14.1667 8.33337" stroke="#707070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 12.5V2.5" stroke="#707070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
         <!-- 分割线 - Figma: Line 76, stroke #E5E6EB -->
         <!-- 只有在有内容、思考完成且流式输出完成后才显示引用和继续问 -->
         <div v-if="shouldShowContent && !isTyping && citations && citations.length > 0" class="divider-line"></div>
@@ -127,6 +186,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'follow-up', question: string): void
   (e: 'typing-complete'): void  // 打字动画完成事件
+  (e: 'show-toast', message: string): void  // Toast 提示事件
 }>()
 
 // 状态
@@ -137,6 +197,10 @@ const typingIndex = ref(0) // 当前打字位置
 const typingTimer = ref<number | null>(null) // 打字定时器
 const hasStartedTyping = ref(false) // 是否已开始打字
 const isThinkingCollapsed = ref(false) // 思考面板是否已收起
+
+// 互动状态
+const isLiked = ref(false) // 是否点赞
+const isDisliked = ref(false) // 是否点踩
 
 // 计算属性 - 是否应该显示内容（思考面板收起后且已开始打字才显示）
 const shouldShowContent = computed(() => {
@@ -279,6 +343,81 @@ function toggleCitations() {
 
 function handleFollowUp(question: string) {
   emit('follow-up', question)
+}
+
+// 互动功能方法
+function handleLike() {
+  if (isLiked.value) {
+    // 取消点赞
+    isLiked.value = false
+  } else {
+    // 点赞，同时取消点踩
+    isLiked.value = true
+    isDisliked.value = false
+    emit('show-toast', '感谢您的点赞支持')
+  }
+}
+
+function handleDislike() {
+  if (isDisliked.value) {
+    // 取消点踩
+    isDisliked.value = false
+  } else {
+    // 点踩，同时取消点赞
+    isDisliked.value = true
+    isLiked.value = false
+    emit('show-toast', '您的反馈已收到，论届会再接再厉')
+  }
+}
+
+async function handleCopy() {
+  try {
+    // 使用现代 Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(props.content)
+    } else {
+      // 降级方案：使用 execCommand
+      const textArea = document.createElement('textarea')
+      textArea.value = props.content
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-9999px'
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+    }
+    emit('show-toast', '回答复制成功')
+  } catch (err) {
+    console.error('复制失败:', err)
+    emit('show-toast', '复制失败，请重试')
+  }
+}
+
+function handleDownload() {
+  try {
+    // 创建 Markdown 文件内容
+    const content = props.content
+    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+
+    // 创建下载链接
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `对话内容_${new Date().toISOString().slice(0, 10)}.md`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
+    // 释放 URL 对象
+    URL.revokeObjectURL(url)
+
+    // 注意：由于浏览器安全限制，无法监听系统下载对话框的用户操作结果
+    // 因此不显示下载成功提示，避免误导用户
+  } catch (err) {
+    console.error('下载失败:', err)
+    // 仅在发生异常时显示错误提示
+    emit('show-toast', '下载失败，请重试')
+  }
 }
 
 // 监听 content 变化
@@ -428,6 +567,81 @@ onUnmounted(() => {
 
 .markdown-content :deep(strong) {
   font-weight: 600;
+}
+
+/* 互动功能图标区域 - Figma: gap 15px, 与文字左对齐 */
+.interaction-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 0px;
+}
+
+/* 互动按钮基础样式 - Figma: 20x20 图标 */
+.interaction-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  position: relative;
+}
+
+.interaction-btn:hover {
+  transform: scale(1.1);
+}
+
+/* 按钮提示文本样式 */
+.btn-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  padding: 6px 12px;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* 提示文本小三角 */
+.btn-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
+}
+
+/* 悬停时显示提示 */
+.interaction-btn:hover .btn-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+}
+
+.interaction-btn:active {
+  transform: scale(0.95);
+}
+
+/* 激活态样式 */
+.interaction-btn.is-active svg path {
+  stroke: #4080FF;
 }
 
 /* 分割线 - Figma: Line 76, stroke #EFEFEF */
