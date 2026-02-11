@@ -4,7 +4,7 @@
     <div class="sidebar-top">
       <div class="logo-area">
         <!-- Logo SVG - shouye logo.svg -->
-        <svg width="160" height="35" viewBox="0 0 160 35" fill="none">
+        <svg width="130" height="28" viewBox="0 0 160 35" fill="none">
           <path d="M0 12.191L21.4281 0L42.8562 12.191L21.4281 24.3819L0 12.191Z" fill="#D9D9D9"/>
           <path d="M8.22845 16.3714V27.5051L21.4447 35L34.4172 27.6433V16.1816L21.4447 6.07666L8.22845 16.3714Z" fill="url(#paint0_linear_sidebar)"/>
           <path d="M34.4172 17.1438L34.2874 16.9229L21.7003 24.0626V24.0638L17.8613 21.8863L13.3207 24.4618L21.7012 29.2153V29.2131L34.4172 22.0003V17.1438Z" fill="url(#paint1_linear_sidebar)"/>
@@ -90,13 +90,40 @@
       </div>
     </div>
 
+    <!-- 语言切换模块 -->
+    <div class="language-section">
+      <div class="language-card">
+        <div class="language-left">
+          <!-- 英文图标 18x18 -->
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 1.5C4.86 1.5 1.5 4.86 1.5 9C1.5 13.14 4.86 16.5 9 16.5C13.14 16.5 16.5 13.14 16.5 9C16.5 4.86 13.14 1.5 9 1.5ZM8.25 14.9325C5.1975 14.5425 2.8125 11.9625 2.8125 8.8125C2.8125 8.3325 2.865 7.8675 2.955 7.4175L6.1875 10.65V11.4375C6.1875 12.195 6.8025 12.81 7.56 12.81V14.9325H8.25ZM13.77 13.0725C13.5825 12.4875 13.0575 12.06 12.4275 12.06H11.8125V9.9375C11.8125 9.5625 11.5125 9.1875 11.0625 9.1875H6.9375V7.875H8.25C8.6325 7.875 8.9375 7.5675 8.9375 7.1875V5.8125H10.25C11.0075 5.8125 11.625 5.1975 11.625 4.44V4.1625C13.905 5.1 15.5 7.3575 15.5 10C15.5 11.295 15.08 12.495 14.37 13.47L13.77 13.0725Z" fill="#4E5969"/>
+          </svg>
+          <span class="language-label">{{ currentLanguage === 'zh' ? '语言' : 'Language' }}</span>
+        </div>
+        <div class="language-toggle">
+          <button
+            :class="['language-btn', { 'language-btn-active': currentLanguage === 'zh' }]"
+            @click="setLanguage('zh')"
+          >
+            中
+          </button>
+          <button
+            :class="['language-btn', { 'language-btn-active': currentLanguage === 'en' }]"
+            @click="setLanguage('en')"
+          >
+            EN
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- 用户信息底栏 -->
     <div class="user-section">
       <div class="user-info-wrapper">
         <div class="user-content">
           <div class="user-avatar">
             <!-- Profile.svg -->
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
               <rect width="36" height="36" rx="18" fill="url(#paint0_linear_profile)"/>
               <mask id="mask0_profile" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36">
                 <rect width="36" height="36" rx="18" fill="url(#paint1_linear_profile)"/>
@@ -121,23 +148,23 @@
           </div>
           <div class="user-details">
             <span class="user-name">李医生</span>
-            <!-- por.svg - 专业版徽章 -->
-            <svg width="45" height="20" viewBox="0 0 45 20" fill="none" class="user-badge-svg">
-              <rect x="0.5" y="0.5" width="44" height="19" rx="3.5" fill="url(#paint0_linear_por)"/>
-              <rect x="0.5" y="0.5" width="44" height="19" rx="3.5" stroke="url(#paint1_linear_por)"/>
-              <path d="M1 5C1 2.79086 2.79086 1 5 1H40.5002L1 17.0001V5Z" fill="#63648D" fill-opacity="0.51"/>
-              <path d="M6.506 7.681H9.575C9.663 7.34 9.74 6.999 9.828 6.669H7.265V5.602H10.07C10.158 5.184 10.235 4.777 10.323 4.359L11.5 4.458C11.434 4.854 11.357 5.228 11.291 5.602H15.834V6.669H11.06C10.983 7.021 10.906 7.351 10.829 7.681H16.494V8.781H10.532C10.411 9.177 10.29 9.562 10.169 9.914H15.207V10.904C14.723 11.619 13.964 12.345 12.941 13.082C13.513 13.28 14.052 13.5 14.58 13.731L13.942 14.721C12.314 13.962 10.653 13.368 8.937 12.939L9.542 12.037C10.29 12.224 11.005 12.422 11.687 12.642C12.589 12.092 13.304 11.531 13.821 10.97H8.53C8.794 10.266 9.036 9.529 9.267 8.781H6.506V7.681ZM20.729 4.535H21.884V13.148H23.094V4.535H24.249V13.148H27.417V14.27H17.583V13.148H20.729V4.535ZM26.196 6.614L27.208 6.9C26.79 8.781 26.262 10.431 25.624 11.839L24.59 11.476C25.206 10.2 25.734 8.572 26.196 6.614ZM18.76 6.581C19.31 8.044 19.805 9.727 20.234 11.619L19.189 11.872C18.815 10.156 18.353 8.506 17.781 6.911L18.76 6.581ZM31.003 4.59H32.125V7.373H32.609V8.506H30.189V8.858C30.189 9.155 30.178 9.441 30.167 9.716H32.268V13.731C32.807 12.697 33.093 11.267 33.137 9.463V5.228C34.886 5.195 36.448 4.964 37.834 4.524L38.384 5.547C37.13 5.921 35.722 6.141 34.182 6.207V7.571H38.175V8.55C37.933 9.98 37.504 11.201 36.866 12.202C37.35 12.84 37.944 13.324 38.637 13.665L38.065 14.688C37.317 14.292 36.679 13.775 36.162 13.126C35.59 13.764 34.93 14.281 34.16 14.699L33.621 13.665C34.358 13.258 34.985 12.752 35.491 12.158C34.952 11.19 34.578 10.024 34.38 8.649H34.182V9.463C34.138 11.608 33.753 13.324 33.038 14.6L32.268 13.764V14.6H31.146V10.805H30.112C29.98 12.389 29.683 13.621 29.243 14.479L28.374 13.72C28.814 12.708 29.045 11.08 29.056 8.858V4.799H30.189V7.373H31.003V4.59ZM35.414 8.649C35.59 9.595 35.854 10.42 36.206 11.135C36.624 10.387 36.91 9.562 37.075 8.649H35.414Z" fill="url(#paint2_linear_por)"/>
+            <!-- tb.svg - 特邀体验官徽章 -->
+            <svg width="36" height="18" viewBox="0 0 36 18" fill="none" class="user-badge-svg">
+              <rect x="0.45" y="0.45" width="35.1" height="17.1" rx="3.15" fill="url(#paint0_linear_tb)"/>
+              <rect x="0.45" y="0.45" width="35.1" height="17.1" rx="3.15" stroke="url(#paint1_linear_tb)" stroke-width="0.9"/>
+              <path d="M0.900391 4.50039C0.900391 2.51217 2.51217 0.900391 4.50039 0.900391H34.2004L0.900391 15.3004V4.50039Z" fill="#63648D" fill-opacity="0.51"/>
+              <path d="M3.4554 7.7629H6.2175C6.2967 7.456 6.366 7.1491 6.4452 6.8521H4.1385V5.8918H6.663C6.7422 5.5156 6.8115 5.1493 6.8907 4.7731L7.95 4.8622C7.8906 5.2186 7.8213 5.5552 7.7619 5.8918H11.8506V6.8521H7.554C7.4847 7.1689 7.4154 7.4659 7.3461 7.7629H12.4446V8.7529H7.0788C6.9699 9.1093 6.861 9.4558 6.7521 9.7726H11.2863V10.6636C10.8507 11.3071 10.1676 11.9605 9.2469 12.6238C9.7617 12.802 10.2468 13 10.722 13.2079L10.1478 14.0989C8.6826 13.4158 7.1877 12.8812 5.6433 12.4951L6.1878 11.6833C6.861 11.8516 7.5045 12.0298 8.1183 12.2278C8.9301 11.7328 9.5736 11.2279 10.0389 10.723H5.277C5.5146 10.0894 5.7324 9.4261 5.9403 8.7529H3.4554V7.7629ZM16.2561 4.9315H17.2956V12.6832H18.3846V4.9315H19.4241V12.6832H22.2753V13.693H13.4247V12.6832H16.2561V4.9315ZM21.1764 6.8026L22.0872 7.06C21.711 8.7529 21.2358 10.2379 20.6616 11.5051L19.731 11.1784C20.2854 10.03 20.7606 8.5648 21.1764 6.8026ZM14.484 6.7729C14.979 8.0896 15.4245 9.6043 15.8106 11.3071L14.8701 11.5348C14.5335 9.9904 14.1177 8.5054 13.6029 7.0699L14.484 6.7729ZM25.5027 4.981H26.5125V7.4857H26.9481V8.5054H24.7701V8.8222C24.7701 9.0895 24.7602 9.3469 24.7503 9.5944H26.6412V13.2079C27.1263 12.2773 27.3837 10.9903 27.4233 9.3667V5.5552C28.9974 5.5255 30.4032 5.3176 31.6506 4.9216L32.1456 5.8423C31.017 6.1789 29.7498 6.3769 28.3638 6.4363V7.6639H31.9575V8.545C31.7397 9.832 31.3536 10.9309 30.7794 11.8318C31.215 12.406 31.7496 12.8416 32.3733 13.1485L31.8585 14.0692C31.1853 13.7128 30.6111 13.2475 30.1458 12.6634C29.631 13.2376 29.037 13.7029 28.344 14.0791L27.8589 13.1485C28.5222 12.7822 29.0865 12.3268 29.5419 11.7922C29.0568 10.921 28.7202 9.8716 28.542 8.6341H28.3638V9.3667C28.3242 11.2972 27.9777 12.8416 27.3342 13.99L26.6412 13.2376V13.99H25.6314V10.5745H24.7008C24.582 12.0001 24.3147 13.1089 23.9187 13.8811L23.1366 13.198C23.5326 12.2872 23.7405 10.822 23.7504 8.8222V5.1691H24.7701V7.4857H25.5027V4.981ZM29.4726 8.6341C29.631 9.4855 29.8686 10.228 30.1854 10.8715C30.5616 10.1983 30.819 9.4558 30.9675 8.6341H29.4726Z" fill="url(#paint2_linear_tb)"/>
               <defs>
-                <linearGradient id="paint0_linear_por" x1="11.6129" y1="-1.28567e-06" x2="31.5409" y2="21.6958" gradientUnits="userSpaceOnUse">
+                <linearGradient id="paint0_linear_tb" x1="9.29033" y1="-1.1571e-06" x2="27.2807" y2="17.41" gradientUnits="userSpaceOnUse">
                   <stop stop-color="#383B51"/>
                   <stop offset="1" stop-color="#302B3B"/>
                 </linearGradient>
-                <linearGradient id="paint1_linear_por" x1="43.2941" y1="16.0447" x2="7.13079" y2="-5.38639" gradientUnits="userSpaceOnUse">
+                <linearGradient id="paint1_linear_tb" x1="34.6352" y1="14.4402" x2="4.03541" y2="-1.67897" gradientUnits="userSpaceOnUse">
                   <stop offset="0.173077" stop-color="#302B3B"/>
                   <stop offset="0.531062" stop-color="#8C8FC4"/>
                   <stop offset="0.918269" stop-color="#393C52"/>
                 </linearGradient>
-                <linearGradient id="paint2_linear_por" x1="22.5" y1="2.5" x2="22.5" y2="15.5" gradientUnits="userSpaceOnUse">
+                <linearGradient id="paint2_linear_tb" x1="18" y1="2" x2="18" y2="14.1333" gradientUnits="userSpaceOnUse">
                   <stop stop-color="#F8E6B8"/>
                   <stop offset="0.3" stop-color="white"/>
                   <stop offset="1" stop-color="#F8E6B8"/>
@@ -153,7 +180,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h } from 'vue'
+import { computed, h, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAppStore, useChatStore } from '@/stores'
 import type { HistoryItem } from '@/types'
@@ -163,6 +190,13 @@ const appStore = useAppStore()
 const chatStore = useChatStore()
 const { activeNav } = storeToRefs(appStore)
 const { historyItems } = storeToRefs(chatStore)
+
+// 语言切换状态（默认中文）
+const currentLanguage = ref<'zh' | 'en'>('zh')
+
+function setLanguage(lang: 'zh' | 'en') {
+  currentLanguage.value = lang
+}
 
 // 图标组件 - 根据 Figma 设计 (search.svg)
 const SearchIcon = {
@@ -383,7 +417,7 @@ function handleHistoryClick(item: HistoryItem) {
   flex-direction: column;
   gap: 12px;
   padding: 0 20px;
-  margin-top: 40px;
+  margin-top: 20px;
   overflow: hidden;
 }
 
@@ -442,16 +476,94 @@ function handleHistoryClick(item: HistoryItem) {
   text-overflow: ellipsis;
 }
 
-/* 用户区域 - Figma: width 280px, height 70px, border-top 1px #E5E6EB */
+/* 用户区域 - Figma: width 280px, height 60px, border-top 1px #E5E6EB */
 .user-section {
   display: flex;
   align-items: stretch;
   gap: 10px;
   padding: 0 20px;
   width: 280px;
-  height: 70px;
+  height: 60px;
   background-color: #F3F5F6;
   border-top: 1px solid #E5E6EB;
+}
+
+/* 语言切换模块 - Figma: Frame 1321319594 */
+.language-section {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: 0 20px;
+  width: 280px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.language-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 6px 6px 10px;
+  width: 100%;
+  background-color: #FFFFFF;
+  border: 0.5px solid #E5E6EB;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.language-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.language-label {
+  font-family: 'PingFang SC', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #4E5969;
+}
+
+.language-toggle {
+  display: flex;
+  align-items: stretch;
+  width: 60px;
+  height: 26px;
+  padding: 3px;
+  background-color: #F3F5F6;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.language-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 3px 4px;
+  border-radius: 2px;
+  font-family: 'PingFang SC', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #86909C;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.language-btn:hover {
+  color: #4E5969;
+}
+
+.language-btn-active {
+  background-color: #FFFFFF;
+  color: #155DFC;
+  font-weight: 600;
+  box-shadow: 0px 1px 3px 0px rgba(25, 33, 61, 0.1);
 }
 
 .user-info-wrapper {
@@ -470,8 +582,8 @@ function handleHistoryClick(item: HistoryItem) {
 
 .user-avatar {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
 }
 
 .user-details {
