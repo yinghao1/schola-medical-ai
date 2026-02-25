@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="cardRef"
     class="floating-news-card"
     :style="cardStyle"
     @mousedown="startDrag"
@@ -44,8 +43,7 @@ const emit = defineEmits<{
   (e: 'click'): void
 }>()
 
-// Refs
-const cardRef = ref<HTMLElement | null>(null)
+// Refs — 不再需要 cardRef（模板也已移除）
 
 // 位置状态 - 初始定位：右边距20px，上边距20px
 const position = ref({
@@ -71,8 +69,9 @@ function startDrag(event: MouseEvent | TouchEvent) {
   isDragging.value = true
   hasMoved.value = false
 
-  const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX
-  const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY
+  const touch = 'touches' in event ? event.touches[0] : undefined
+  const clientX = touch ? touch.clientX : (event as MouseEvent).clientX
+  const clientY = touch ? touch.clientY : (event as MouseEvent).clientY
 
   dragStart.value = {
     x: clientX - position.value.x,
@@ -94,8 +93,9 @@ function onDrag(event: MouseEvent | TouchEvent) {
   hasMoved.value = true
   hasBeenDragged.value = true // 标记已被拖动
 
-  const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX
-  const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY
+  const touch = 'touches' in event ? event.touches[0] : undefined
+  const clientX = touch ? touch.clientX : (event as MouseEvent).clientX
+  const clientY = touch ? touch.clientY : (event as MouseEvent).clientY
 
   // 计算新位置
   let newX = clientX - dragStart.value.x
