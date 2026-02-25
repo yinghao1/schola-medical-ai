@@ -3,19 +3,48 @@ import type { PubMedArticle } from '@/types'
 /**
  * PubMed E-utilities API 服务
  *
- * 开发环境通过 Vite proxy（/pubmed-api）转发请求，避免 CORS 问题
- * 生产环境直接调用 NCBI API（已支持 CORS）
+ * 开发环境：通过 Vite proxy（/pubmed-api）转发
+ * 生产环境：通过 Vercel Serverless Function（/api/pubmed）转发
+ *
+ * 两种方式均为服务端代理，彻底避免 CORS 问题。
  */
 
-const PUBMED_BASE = import.meta.env.DEV
-  ? '/pubmed-api'
-  : 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils'
+/** 带重试的 fetch 封装 */
+async function fetchWithRetry(
+  url: string,
+  retries = 2,
+  timeout = 15000
+): Promise<Response> {
+  let lastError: Error | null = null
+
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), timeout)
+
+      const res = await fetch(url, { signal: controller.signal })
+      clearTimeout(timer)
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} ${res.statusText}`)
+      }
+      return res
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err))
+      console.warn(`[PubMed] Attempt ${i + 1}/${retries + 1} failed:`, lastError.message)
+
+      // 最后一次不等待
+      if (i < retries) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
+      }
+    }
+  }
+
+  throw lastError ?? new Error('Request failed')
+}
 
 /**
  * 搜索文献 ID 列表
- * @param query  PubMed 搜索词（MeSH 或自由文本）
- * @param retmax 返回数量上限
- * @param reldate 相对天数（最近 N 天内发布的文献）
  */
 async function searchArticles(
   query: string,
@@ -27,25 +56,29 @@ async function searchArticles(
     term: query,
     retmax: String(retmax),
     sort: 'pub_date',
-    retmode: 'json',
-    tool: 'schola_medical_ai',
-    email: 'schola@example.com'
+    retmode: 'json'
   })
 
-  // 使用 reldate 参数限制日期范围（NCBI 标准方式）
   if (reldate) {
     params.set('reldate', String(reldate))
     params.set('datetype', 'pdat')
   }
 
-  const url = `${PUBMED_BASE}/esearch.fcgi?${params}`
-  console.log('[PubMed] Search request:', url)
-
-  const res = await fetch(url)
-  if (!res.ok) {
-    throw new Error(`PubMed search failed: ${res.status} ${res.statusText}`)
+  let url: string
+  if (import.meta.env.DEV) {
+    // 开发环境：Vite proxy
+    params.set('tool', 'schola_medical_ai')
+    params.set('email', 'schola@example.com')
+    url = `/pubmed-api/esearch.fcgi?${params}`
+  } else {
+    // 生产环境：Vercel Serverless Function
+    params.set('endpoint', 'esearch.fcgi')
+    url = `/api/pubmed?${params}`
   }
 
+  console.log('[PubMed] Search request:', url)
+
+  const res = await fetchWithRetry(url)
   const data = await res.json()
   const ids = data.esearchresult?.idlist || []
   console.log(`[PubMed] Found ${ids.length} articles for query: "${query}"`)
@@ -61,19 +94,22 @@ async function fetchSummaries(ids: string[]): Promise<PubMedArticle[]> {
   const params = new URLSearchParams({
     db: 'pubmed',
     id: ids.join(','),
-    retmode: 'json',
-    tool: 'schola_medical_ai',
-    email: 'schola@example.com'
+    retmode: 'json'
   })
 
-  const url = `${PUBMED_BASE}/esummary.fcgi?${params}`
-  console.log('[PubMed] Summary request for', ids.length, 'articles')
-
-  const res = await fetch(url)
-  if (!res.ok) {
-    throw new Error(`PubMed summary failed: ${res.status} ${res.statusText}`)
+  let url: string
+  if (import.meta.env.DEV) {
+    params.set('tool', 'schola_medical_ai')
+    params.set('email', 'schola@example.com')
+    url = `/pubmed-api/esummary.fcgi?${params}`
+  } else {
+    params.set('endpoint', 'esummary.fcgi')
+    url = `/api/pubmed?${params}`
   }
 
+  console.log('[PubMed] Summary request for', ids.length, 'articles')
+
+  const res = await fetchWithRetry(url)
   const data = await res.json()
   const result = data.result || {}
 
