@@ -12,6 +12,14 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: true
+    open: true,
+    proxy: {
+      '/pubmed-api': {
+        target: 'https://eutils.ncbi.nlm.nih.gov',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/pubmed-api/, '/entrez/eutils'),
+        secure: true
+      }
+    }
   }
 })

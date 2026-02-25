@@ -52,20 +52,32 @@
         </transition>
       </div>
     </main>
+    <!-- 浮动新闻卡片 - 右上角，可拖动，面板打开时隐藏 -->
+    <FloatingNewsCard
+      v-show="!pubmedStore.isPanelOpen"
+      :news-count="pubmedStore.totalCount"
+      @click="handleNewsCardClick"
+    />
+
+    <!-- 文献推荐面板 - 右侧滑入 -->
+    <LiteraturePanel />
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useAppStore, useChatStore } from '@/stores'
+import { useAppStore, useChatStore, usePubmedStore } from '@/stores'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import HomeView from '@/components/home/HomeView.vue'
 import ChatView from '@/components/chat/ChatView.vue'
+import FloatingNewsCard from '@/components/common/FloatingNewsCard.vue'
+import LiteraturePanel from '@/components/common/LiteraturePanel.vue'
 import type { ThinkingStep, Citation } from '@/types'
 
 // Stores
 const appStore = useAppStore()
 const chatStore = useChatStore()
+const pubmedStore = usePubmedStore()
 
 const { sidebarCollapsed, mobileMenuOpen } = storeToRefs(appStore)
 const { hasActiveConversation } = storeToRefs(chatStore)
@@ -206,6 +218,11 @@ function updateThinkingStep(messageId: string, stepIndex: number, status: 'pendi
 
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+// 浮动卡片点击处理 - 打开文献推荐面板
+function handleNewsCardClick() {
+  pubmedStore.openPanel()
 }
 </script>
 

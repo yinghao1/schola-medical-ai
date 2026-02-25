@@ -74,3 +74,22 @@ export interface AppState {
   isGenerating: boolean
   deepThinkingEnabled: boolean
 }
+
+// PubMed 文献相关类型
+export interface PubMedArticle {
+  pmid: string
+  title: string
+  authors: string[]
+  journal: string
+  pubDate: string
+  abstract?: string
+  doi?: string
+  url: string
+  categories: string[]
+}
+
+export interface PubMedTag {
+  id: string
+  label: string
+  query: string // PubMed 搜索关键词
+}
