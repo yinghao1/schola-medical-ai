@@ -55,7 +55,7 @@
     <!-- 浮动新闻卡片 - 右上角，可拖动，面板打开时隐藏 -->
     <FloatingNewsCard
       v-show="!pubmedStore.isPanelOpen"
-      :news-count="pubmedStore.totalCount"
+      :news-count="pubmedStore.totalCount || pubmedStore.settings.dailyCount"
       @click="handleNewsCardClick"
     />
 
