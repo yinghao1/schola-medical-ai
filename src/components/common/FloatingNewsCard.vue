@@ -6,9 +6,9 @@
     @touchstart="startDrag"
     @click="handleClick"
   >
-    <!-- 背景装饰图 - Figma: Mask group (使用SVG) -->
+    <!-- 背景装饰图 - Figma: Mask group -->
     <div class="card-bg">
-      <img src="@/assets/images/news-card-mask.svg" alt="" />
+      <img src="@/assets/images/news-card-bg.png" alt="" />
     </div>
 
     <!-- 内容区域 - Figma: Frame 1321319606 -->

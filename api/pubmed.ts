@@ -21,10 +21,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { endpoint, ...queryParams } = req.query
 
   // 校验 endpoint 白名单
-  const allowed = ['esearch.fcgi', 'esummary.fcgi']
+  const allowed = ['esearch.fcgi', 'esummary.fcgi', 'efetch.fcgi']
   const ep = Array.isArray(endpoint) ? endpoint[0] : endpoint
   if (!ep || !allowed.includes(ep)) {
-    return res.status(400).json({ error: 'Invalid endpoint. Allowed: esearch.fcgi, esummary.fcgi' })
+    return res.status(400).json({ error: 'Invalid endpoint. Allowed: esearch.fcgi, esummary.fcgi, efetch.fcgi' })
   }
 
   // 构建 NCBI 请求 URL
@@ -42,7 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const response = await fetch(url, {
       headers: {
-        'Accept': 'application/json'
+        'Accept': '*/*'
       },
       signal: AbortSignal.timeout(15000) // 15s 超时
     })
@@ -53,10 +53,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
     }
 
-    const data = await response.json()
-
     // 设置缓存：5 分钟 CDN 缓存，1 分钟客户端缓存
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=60')
+
+    // efetch 返回 XML 格式，直接透传文本；其他接口返回 JSON
+    const contentType = response.headers.get('content-type') || ''
+    if (contentType.includes('xml') || ep === 'efetch.fcgi') {
+      const text = await response.text()
+      res.setHeader('Content-Type', 'text/xml; charset=utf-8')
+      return res.status(200).send(text)
+    }
+
+    const data = await response.json()
     return res.status(200).json(data)
   } catch (err) {
     console.error('[PubMed Proxy] Error:', err)

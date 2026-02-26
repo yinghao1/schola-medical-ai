@@ -86,10 +86,25 @@ export interface PubMedArticle {
   doi?: string
   url: string
   categories: string[]
+  pubType?: string        // PubMed 文献类型
+  impactFactor?: number   // IF 指数
+  isHot?: boolean         // 本月热文
+  isFavorited?: boolean   // 是否已收藏
 }
 
-export interface PubMedTag {
+export interface PubMedKeyword {
   id: string
   label: string
   query: string // PubMed 搜索关键词
+}
+
+// 文献推荐设置
+export type TimeWindow = 30 | 90 | 180
+export type JournalFilter = 'all' | 'highIF' | 'top'
+
+export interface PubMedSettings {
+  timeWindow: TimeWindow
+  journalFilter: JournalFilter
+  dailyCount: number
+  personalPreference: string
 }
