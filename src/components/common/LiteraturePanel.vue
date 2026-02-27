@@ -4,6 +4,16 @@
       <!-- 标题栏 -->
       <div class="panel-header">
         <div class="header-left">
+          <button
+            v-if="pubmedStore.showSettings"
+            class="header-back-btn"
+            @click="pubmedStore.closeSettings"
+            aria-label="返回"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 3L5 8L10 13" stroke="#333333" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
           <span class="header-title">{{ pubmedStore.showSettings ? '推荐设置' : '文献推荐' }}</span>
           <span v-if="!pubmedStore.showSettings" class="header-badge">基于您的兴趣领域</span>
         </div>
@@ -21,8 +31,8 @@
             </svg>
             <span class="action-tooltip">推荐设置</span>
           </button>
-          <!-- 关闭按钮 -->
-          <button class="close-btn" @click="pubmedStore.closePanel" aria-label="关闭">
+          <!-- 关闭按钮（仅在文献列表视图显示） -->
+          <button v-if="!pubmedStore.showSettings" class="close-btn" @click="pubmedStore.closePanel" aria-label="关闭">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 3L13 13M3 13L13 3" stroke="#333333" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -584,6 +594,25 @@ function doDeleteKeyword() {
   border-radius: 4px;
   border: 0.5px solid #E5E6EB;
   box-sizing: border-box;
+}
+
+.header-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0;
+  transition: background-color 0.15s;
+  flex-shrink: 0;
+}
+
+.header-back-btn:hover {
+  background-color: #FFFFFF;
 }
 
 .header-icon-btn {
